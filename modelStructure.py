@@ -7,16 +7,18 @@ Created on Mon Feb 10 22:22:03 2020
 
 from keras import layers, models
 from keras.models import Model as KerasModel
+from keras.models import Sequential
 from keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Dropout, Reshape, Concatenate, LeakyReLU
 from keras.optimizers import Adam
-
+from numpy.random import seed
+seed(1)
 
 
 class MesoInception4():
     def __init__(self, learning_rate = 0.001):
         self.model = self.init_model()
         optimizer = Adam(lr = learning_rate)
-        self.model.compile(optimizer = optimizer, loss = 'mean_squared_error', metrics = ['binary_accuracy'])
+        self.model.compile(optimizer = optimizer, loss = 'mean_squared_error', metrics = ['accuracy'])
     
     def InceptionLayer(self, a, b, c, d):
         def func(x):
@@ -70,12 +72,12 @@ class MesoInception4():
     
     
     def predictModel(self, x, batchSize):
-       return self.model.predict_generator(x, 4000/batchSize)
+       return self.model.predict_classes(x)
     
    
     def fit(self, x, y, batchSize, epochSize, trainingSize, validationSize, initialEpoch):
         
-       classWeight = {0:100, 1:50}
+       #classWeight = {0:100, 1:50}
        # return self.model.fit_generator(x, steps_per_epoch=256, validation_data=y, validation_steps=64, Epochs=1)
        return self.model.fit_generator(x, steps_per_epoch=trainingSize/batchSize, epochs=epochSize, validation_data=y, initial_epoch=initialEpoch)
     
