@@ -251,7 +251,6 @@ class FaceBatchGenerator:
     '''
     Made to deal with framesubsets of video.
     '''
-    def __init__(self, face_finder, target_size = 256):
         self.finder = face_finder
         self.target_size = target_size
         self.head = 0

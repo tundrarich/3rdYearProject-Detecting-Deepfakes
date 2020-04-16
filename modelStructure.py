@@ -11,6 +11,7 @@ from keras.models import Sequential
 from keras.layers import Input, Dense, Flatten, Conv2D, MaxPooling2D, BatchNormalization, Dropout, Reshape, Concatenate, LeakyReLU
 from keras.optimizers import Adam
 from numpy.random import seed
+from keract import get_activations, display_activations
 seed(1)
 
 
@@ -69,30 +70,16 @@ class MesoInception4():
    # def __init__():
     #    self.model = 0
 
-    
-    
-    def predictModel(self, x, batchSize):
-       return self.model.predict_classes(x)
-    
-   
-    def fit(self, x, y, batchSize, epochSize, trainingSize, validationSize, initialEpoch):
+    def fitGenerator(self, x, y, batchSize, epochSize, trainingSize, validationSize, classWeights):
         
-       #classWeight = {0:100, 1:50}
-       # return self.model.fit_generator(x, steps_per_epoch=256, validation_data=y, validation_steps=64, Epochs=1)
-       return self.model.fit_generator(x, steps_per_epoch=trainingSize/batchSize, epochs=epochSize, validation_data=y, initial_epoch=initialEpoch)
-    
-
-    def loadWeights(self, path):
-        self.model.load_weights(path)    
-    
-        
-    def evaluateModel(self, x, batchSize, testingSize):
-       return self.model.evaluate(x, steps=testingSize/batchSize)
-    
+       return self.model.fit_generator(x, steps_per_epoch=trainingSize/batchSize, epochs=epochSize, validation_data=y 
+                                       )
     def save(self):
         model_json = self.model.to_json()
         with open("Models/model.json", "w") as json_file:
             json_file.write(model_json)
         self.model.save_weights("Models/model.h5")
         print("Saved model to disk")
+    
+    
         
