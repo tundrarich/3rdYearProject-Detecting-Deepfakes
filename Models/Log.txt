@@ -1,5 +1,1 @@
-Trained model initially with 1 epochs. 
-Trained model initially with 3 epochs. 
-Trained model initially with 3 epochs. 
 Trained model initially with 10 epochs. 
-Trained model from 11 epochs to 15 epochs. 

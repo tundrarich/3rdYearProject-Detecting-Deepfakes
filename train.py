@@ -25,13 +25,13 @@ from keract import get_activations, display_activations
 batchSize = 50
 
 startEpoch = 11
-epochSize = 15
+epochSize = 20
 
 learningRate = 0.001
 
-trainingSize = 9055
-validationSize = 3060
-testingSize = 3042
+trainingSize = 6973
+validationSize = 2279
+testingSize = 3035
 
 
 classWeights = {0:1, 1:1}
@@ -52,8 +52,8 @@ def trainInitial():
     
     
     
-    trainGenerator = datagen.flow_from_directory('Data/Deepfake/Training/', class_mode='binary', batch_size=batchSize, shuffle=True)
-    validationGenerator = datagen.flow_from_directory('Data/Deepfake/Validation/', class_mode='binary', batch_size=batchSize, shuffle=False)  
+    trainGenerator = datagen.flow_from_directory('MixedData/Training/', class_mode='binary', batch_size=batchSize, shuffle=False)
+    validationGenerator = datagen.flow_from_directory('MixedData/Validation/', class_mode='binary', batch_size=batchSize, shuffle=False)  
     print(validationGenerator.class_indices)
     
     model.fitGenerator(trainGenerator, validationGenerator, batchSize, epochSize, trainingSize, validationSize, classWeights)
@@ -81,8 +81,8 @@ def loadModelContinueTraining():
     datagen = ImageDataGenerator(horizontal_flip=True, rotation_range=60, zoom_range=0.2, rescale=1./255)
     
       
-    trainGenerator = datagen.flow_from_directory('Data/Deepfake/Training/', class_mode='binary', batch_size=batchSize, shuffle=True)
-    validationGenerator = datagen.flow_from_directory('Data/Deepfake/Validation/', class_mode='binary', batch_size=batchSize, shuffle=False) 
+    trainGenerator = datagen.flow_from_directory('MixedData/Training/', class_mode='binary', batch_size=batchSize, shuffle=False)
+    validationGenerator = datagen.flow_from_directory('MixedData/Validation/', class_mode='binary', batch_size=batchSize, shuffle=False) 
   
     model.fit_generator(trainGenerator, steps_per_epoch=trainingSize/batchSize, epochs=epochSize, initial_epoch= startEpoch -1, validation_data=validationGenerator, 
                                        class_weight=classWeights)
@@ -117,7 +117,7 @@ def loadModelTest():
   
 
     datagen = ImageDataGenerator(rescale=1./255)
-    testGenerator = datagen.flow_from_directory('Data/Deepfake/Testing/', class_mode='binary', batch_size=batchSize, shuffle=False)
+    testGenerator = datagen.flow_from_directory('IndividualData/Deepfake/Testing/', class_mode='binary', batch_size=batchSize, shuffle=False)
    
     results = model.evaluate(testGenerator, steps=testingSize/batchSize)
     
@@ -136,7 +136,7 @@ def predictModel():
   
 
     datagen = ImageDataGenerator(rescale=1./255)
-    predictGenerator = datagen.flow_from_directory('Data/Deepfake/Predict/', batch_size=1, shuffle=False)
+    predictGenerator = datagen.flow_from_directory('IndividualData/Deepfake/Predict/', batch_size=1, shuffle=False)
     data = [None] * predictSize
     predictRaw = [None] * predictSize
     predictData = [None] * predictSize
@@ -168,8 +168,8 @@ def load_images_from_folder(folder):
    return cv_img
 
 
-trainInitial() 
-#loadModelContinueTraining()
+#trainInitial() 
+loadModelContinueTraining()
 #loadModelTest()  
 #predictModel()
 
